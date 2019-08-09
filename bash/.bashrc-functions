@@ -1,0 +1,91 @@
+function nix(){ nix-env -qa \* -P | fgrep -i "$1"; }
+
+# Colorize Maven Output
+# Colors reference: http://en.wikipedia.org/wiki/ANSI_escape_code
+color_maven() {
+    /run/current-system/sw/bin/mvn $* | sed \
+    -e 's/Tests run: \([^,]*\), Failures: \([^,]*\), Errors: \([^,]*\), Skipped: \([^,]*\)/[32;1mTests run: \1[0m, Failures: [31;1m\2[0m, Errors: [33;1m\3[0m, Skipped: [34;1m\4[0m/g' \
+    -e 's/\(\[INFO\] \-[-]*$\)/[36;1m\1[0m/g' \
+    -e 's/\(\[INFO\] Building.*\)/[36;1m\1[0m/g' \
+    -e 's/\(.*WARN.*\)/[33;1m\1[0m/g' \
+    -e 's/\(.*ERROR.*\)/[31;1m\1[0m/g' \
+    -e 's/\(Downloaded:.*\)/[32;1m\1[0m/g'
+}
+
+function basher() {
+    if [[ $1 = 'run' ]];  then
+        shift
+        docker run -e HIST_FILE=/root/.bash_history \
+          -v $HOME/.bash_history:/root/.bash_history "$@"
+    else
+        docker "$@"
+    fi
+}
+
+function robomongo() {
+    XSOCK=/tmp/.X11-unix
+    XAUTH=/tmp/.docker.xauth
+    xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+    xhost +
+    docker run -it --rm -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH --net=host nexus.osoco.es/osoco/robo3t:latest
+}
+
+function find_file_in_nix_store() {
+    local _packagePrefix="${1}";
+    local _packageSuffix="${2}";
+    local _fileName="${3}";
+#    ls /nix/store | grep "${_packagePrefix}" | grep "${_packageSuffix}" | awk -v file="${_fileName}" '{printf("find /nix/store/%s -name %s\n", $2, file);}' | sh | awk -F'-' '{printf("%s %s\n", $3, $0);}' | sort | tail -n 1
+
+    ls /nix/store | grep "${_packagePrefix}" | grep "${_packageSuffix}" | awk -v file="${_fileName}" '{printf("find /nix/store/%s -name %s\n", $0, file);}' | sh  | awk -F'-' '{printf("%s %s\n", $3, $0);}' | sort | tail -n 1 | awk '{print $2;}'
+}
+
+function find_folder_of_file_in_nix_store() {
+    local _packagePrefix="${1}";
+    local _packageSuffix="${2}";
+    local _fileName="${3}";
+    local _folder="$(find_file_in_nix_store "${_packagePrefix}" "${_packageSuffix}" "${_fileName}")";
+    dirname "${_folder}";
+}
+
+function find_stdc_folder() {
+    find_folder_of_file_in_nix_store gcc lib "libstdc++.so.6"
+}
+
+function patch_gradle_libnativeplatform() {
+    local _rpath="$(find_stdc_folder)";
+    if [ "x${_rpath}" != "x" ]; then
+        find ~/.gradle/native -name libnative-platform.so -exec patchelf --set-rpath "${_rpath}" {} \;
+    fi
+}
+
+## Finds out the location of the libstdc++.so.6 library.
+function find_stdcplusplus_in_nix_store() {
+    local _fileName="libstdc++.so.6";
+
+    ls /nix/store | grep "gcc" | grep "lib" | awk -v file="${_fileName}" '{printf("find /nix/store/%s -name %s\n", $0, file);}' | sh  | awk -F'-' '{printf("%s %s\n", $3, $0);}' | sort | tail -n 1 | awk '{print $2;}'
+}
+
+## Finds out the location of the folder containing the libstdc++.so.6 library.
+function find_stdcplusplus_parent_folder_in_nix_store() {
+    local _folder="$(find_stdcplusplus_in_nix_store)";
+    dirname "${_folder}";
+}
+
+## Runs Vault commands
+function vault() {
+  local _command="${1}";
+  shift;
+  local _subcommand="${1}";
+  shift;
+  local _afterCommand="";
+  local _afterSubcommand="";
+  local _vaultUrl="${VAULT_URL:-http://vault:8200}";
+
+  if [[ "${_command}" == "operator" ]]; then
+    _afterSubcommand="-address=${_vaultUrl}";
+  else
+    _afterCommand="-address=${_vaultUrl}";
+  fi
+  echo docker exec -it vault vault ${_command} ${_afterCommand} ${_subcommand} ${_afterSubcommand} $@ 
+  docker exec -it vault vault ${_command} ${_afterCommand} ${_subcommand} ${_afterSubcommand} $*
+}

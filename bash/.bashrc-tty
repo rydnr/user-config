@@ -1,0 +1,125 @@
+# /etc/skel/.bashrc:
+# $Header: /home/cvsroot/gentoo-src/rc-scripts/etc/skel/.bashrc,v 1.7 2002/11/18 19:39:22 azarah Exp $
+
+# colors for ls, etc.
+[ -f /etc/DIR_COLORS ] && eval `dircolors -b /etc/DIR_COLORS`
+[ -f ~/.bashrc-aliases ] && . ~/.bashrc-aliases
+[ -f ~/.bashrc-privatealiases ] && . ~/.bashrc-privatealiases
+
+SCREEN_EXEC="screen";
+#SCREEN_EXEC="byobu";
+
+# Change the window title of X terminals 
+case $TERM in
+    xterm*|rxvt|eterm)
+        PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\007"'
+        ;;
+    screen)
+        PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\033\\"'
+        ;;
+esac
+
+#export ORIGINAL_PATH=$PATH
+
+#source ~/dev/env/src/shellscripts/startup.sh
+
+#jdk16
+
+echo "->1-$(date)" >> /tmp/login.log
+##uncomment the following to activate bash-completion:
+[ -f /etc/profile.d/bash-completion ] && source /etc/profile.d/bash-completion
+echo "->2-$(date)" >> /tmp/login.log
+
+function autoscreen {
+  local _result=0;
+  if [ "x${TERM}" != "x" ] && [ "${TERM}" != "dumb" ]; then
+    # Auto-screen invocation. see: http://taint.org/wk/RemoteLoginAutoScreen
+    # if we're coming from a remote SSH connection, in an interactive session
+    # then automatically put us into a screen(1) session. Only try once
+    # -- if $STARTED_SCREEN is set, don't try it again, to avoid looping
+    # if screen fails for some reason.
+    #if [ "$PS1" != "" -a "${TERM}" != "screen" ]; then
+    if [ "$PS1" != "" ]; then
+      [ -d $HOME/.screenlogs ] || mkdir -p $HOME/.screenlogs
+#      sleep 1
+      if [ "x${XDM_MANAGED}" == "x" ]; then
+        _SCREENRC=".screenrc.$$";
+      fi
+#      EDITOR="emacsclient"; export EDITOR;
+      ${SCREEN_EXEC} -wipe > /dev/null 2>&1
+      launch_screen;
+      ${SCREEN_EXEC} -x ${RESULT};
+     fi
+   #
+   # [end of auto-screen snippet]
+  fi
+  return ${_result}
+}
+function launch_screen () {
+  local _result=0; 
+  local _sessId;
+  local _goOn=1;
+  if [ "x${SCREEN_LAUNCHED}" == "x" ]; then
+    _goOn=0;
+  elif    [ "${SCREEN_LAUNCHED}" != "${STY}-${SSH_TTY}" ] \
+       && [ "${SCREEN_LAUNCHED}" != "-" ]; then
+    _goOn=0;
+  fi
+  if [ ${_goOn} == 0 ]; then
+    _sessId=`${SCREEN_EXEC} -ls | grep ${HOSTNAME} | wc -l`;
+    if [ ${_sessId} == 0 ]; then
+      echo ${SCREEN_EXEC} -d -m -a -A;
+      ${SCREEN_EXEC} -d -m -a -A;
+#    else
+#      echo "Finding out first screen session..."
+    fi
+    _sessId=`${SCREEN_EXEC} -ls | grep ${HOSTNAME} | head -n 1 | awk '{print $1;}' | awk -F"." '{print $1;}'`
+    _result=1;
+    SCREEN_LAUNCHED="${STY}-${SSH_TTY}";
+    export RESULT="${_sessId}";
+  fi
+  return ${_result};
+}
+#autoscreen
+echo "->3-$(date)" >> /tmp/login.log
+#echo .bashrc loaded
+source ~/bin/fancyvt.sh 
+echo "->4-$(date)" >> /tmp/login.log
+#prevPid=""
+#if [ -f ~/.fetchmail.pid ]; then
+#  prevPid=`cat ~/.fetchmail.pid 2>&1 | tail 2>&1 > /dev/null`
+#fi
+#if [ "x${prevPid}" != "x" ]; then
+#  ps -ef | grep ${prevPid} 2>&1 > /dev/null
+#  prevPid=""
+#  rm -f ~/.fetchmail.pid 2>&1 > /dev/null
+#fi
+#if [ "x${prevPid}" == "x" ]; then
+#  ps -ef | grep fetchmail | grep -v grep | grep chous 2>&1 > /dev/null
+#  if [ $? != 0 ]; then
+#    fetchmail -d 60 -f ~/.fetchmailrc
+##    echo $! > .fetchmail.pid
+#  fi
+#fi
+
+source .bashrc-functions
+#sudo ~/bin/lp.sh
+~/bin/xrandr.sh > /dev/null
+echo "->5-$(date)" >> /tmp/login.log
+[ -f ~/.bashrc-privatealiases ] && . ~/.bashrc-privatealiases
+echo "->6-$(date)" >> /tmp/login.log
+reset
+#~/bin/rt.sh
+echo "->7-$(date)" >> /tmp/login.log
+reset
+#echo "Launching fetchmail"
+#fetchmail &
+#sudo modprobe vboxdrv vboxnetadp vboxpci vboxnetflt
+
+alias docker=basher
+source ~/.bashrc-exports
+echo "->8-$(date)" >> /tmp/login.log
+source ~/.bashrc-aliases
+echo "->9-$(date)" >> /tmp/login.log
+#eval "$(grunt --completion=bash)"
+

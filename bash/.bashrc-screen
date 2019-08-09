@@ -1,0 +1,45 @@
+# /etc/skel/.bashrc:
+# $Header: /home/cvsroot/gentoo-src/rc-scripts/etc/skel/.bashrc,v 1.7 2002/11/18 19:39:22 azarah Exp $
+
+# Change the window title of X terminals 
+aux="${TERM}"
+if [ "${aux}" == "xterm-screen-256c" ]; then
+  aux="screen";
+fi
+case $aux in
+    xterm*|rxvt|eterm)
+        PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\007"'
+        ;;
+    screen)
+        PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/$HOME/~}\033\\"'
+        ;;
+esac
+
+#export ORIGINAL_PATH=$PATH
+
+#source ~/dev/env/src/shellscripts/startup.sh
+
+#jdk16
+
+#export EDITOR=/usr/bin/emacsclient
+
+##uncomment the following to activate bash-completion:
+[ -f /etc/profile.d/bash-completion ] && source /etc/profile.d/bash-completion
+
+source ~/bin/fancyvt.sh 
+#prevPid=""
+#if [ -f ~/.fetchmail.pid ]; then
+#  prevPid=`cat ~/.fetchmail.pid 2>&1 | tail 2>&1 > /dev/null`
+#fi
+#if [ "x${prevPid}" != "x" ]; then
+#  ps -ef | grep ${prevPid} 2>&1 > /dev/null
+#  prevPid=""
+#  rm -f ~/.fetchmail.pid 2>&1 > /dev/null
+#fi
+#if [ "x${prevPid}" == "x" ]; then
+#  ps -ef | grep fetchmail | grep -v grep | grep chous 2>&1 > /dev/null
+#  if [ $? != 0 ]; then
+#    /usr/bin/fetchmail -d 60 -f ~/.fetchmailrc
+##    echo $! > .fetchmail.pid
+#  fi
+#fi
