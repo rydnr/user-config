@@ -26,7 +26,7 @@ function robomongo() {
     XSOCK=/tmp/.X11-unix
     XAUTH=/tmp/.docker.xauth
     xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
-    xhost +
+    xhost +localhost
     docker run -it --rm -v $XSOCK:$XSOCK -v $XAUTH:$XAUTH -e XAUTHORITY=$XAUTH --net=host nexus.osoco.es/osoco/robo3t:latest
 }
 

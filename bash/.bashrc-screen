@@ -1,6 +1,12 @@
 # /etc/skel/.bashrc:
 # $Header: /home/cvsroot/gentoo-src/rc-scripts/etc/skel/.bashrc,v 1.7 2002/11/18 19:39:22 azarah Exp $
 
+# colors for ls, etc.
+[ -f /etc/DIR_COLORS ] && eval `dircolors -b /etc/DIR_COLORS`
+alias d="ls --color"
+alias ls="ls --color=auto"
+alias ll="ls --color -l"
+
 # Change the window title of X terminals 
 aux="${TERM}"
 if [ "${aux}" == "xterm-screen-256c" ]; then
@@ -26,6 +32,51 @@ esac
 ##uncomment the following to activate bash-completion:
 [ -f /etc/profile.d/bash-completion ] && source /etc/profile.d/bash-completion
 
+alias acmcvs="CVS_RSH=ssh CVSROOT=:ext:chous@cvs.acm-sl.org:/var/cvs cvs"
+alias t24cvs="CVS_RSH=ssh CVSROOT=:ext:jlean@sourceforge.office.tipp24.de:/home/cvsroot cvs"
+alias v24cvs="CVS_RSH=ssh CVSROOT=:ext:jlean@192.168.34.253:/home/cvsroot cvs"
+#alias v24cvs="CVS_RSH=ssh CVSROOT=:pserver:jlean@192.168.34.253:/home/cvsroot cvs"
+alias w3ccvs="CVSROOT=:pserver:anonymous@dev.w3.org:/sources/public cvs"
+
+#alias emacs="(pushd ~ ; emacs --unibyte ; popd) &"
+#alias emacs="emacs -nw --unibyte"
+
+alias rdesktop="rdesktop -k en-us -g 1024x768 "
+alias syspass="mount /mnt/delta-managed 2>&1; oocalc /mnt/delta-managed/Tecnologia/Sysadmin/V24\ Administration/Policies/System\ Passwords/Pass_Sysadmin.xls"
+alias nicesvn="ps -ef | grep svn | grep -v grep | awk '{printf(\"sudo renice -19 -p %s\n\", \$2);}' | sh"
+#export AXIS_HOME=/usr/java/axis
+#export AXIS_LIB=$AXIS_HOME/lib
+#export AXISCLASSPATH=$AXIS_LIB/axis.jar:$AXIS_LIB/commons-discovery.jar:$AXIS_LIB/commons-logging.jar:$AXIS_LIB/jaxrpc.jar:$AXIS_LIB/saaj.jar:$AXIS_LIB/log4j-1.2.8.jar:$AXIS_LIB/xml-apis.jar:$AXIS_LIB/xercesImpl.jar
+#export CVSROOT=":pserver:jlean@ven24devel:/home/cvsroot"
+#export ANT_HOME="/usr/java/apache-ant"
+#export TOMCAT_HOME="/usr/java/jakarta-tomcat-3.3.1a"
+#export CATALINA_HOME="/usr/java/catalina"
+#export ELUCIDATOR_HOME="/usr/java/elucidator"
+#export ELUCIDATOR_MAIN_CONFIG_FILE="/home/chous/.elucidator/Main.conf"
+#export ANT_HOME="/usr/java/apache-ant"
+export MAVEN_HOME="/usr/share/maven-bin-1.0/"
+export MAVEN2_HOME="/usr/share/maven-bin-2.0/"
+#export BCEL_HOME="/usr/java/bcel"
+#export EJP_TRACER_HOME="/usr/java/ejp-tracer"
+#export JMP_LIB="/usr/local/lib"
+#export ASPECTJ_HOME="/usr/java/aspectj"
+export JALOPY_HOME="/usr/java/jalopy"
+#export JPROFMEM_HOME="/usr/java/jprofmem"
+export PATH=$ANT_HOME/bin:$MAVEN_HOME/bin:$PATH:$KDE_HOME/bin:~/bin
+#export CLASSPATH=$CLASSPATH:/usr/java/xt/xt.jar:/usr/java/xt/sax.jar:/usr/java/xp/xp.jar:$BCEL_HOME/bcel.jar:$EJP_TRACER_HOME/lib/tracerapi.jar:$ASPECTJ_HOME/lib/aspectjrt.jar:$JALOPY_HOME/jalopy.jar:$JALOPY_HOME/jalopy-ant.jar:$AXISCLASSPATH
+export PATH="/usr/local/bin:$EJP_TRACER_HOME/lib:$ASPECTJ_HOME/bin:$PATH"
+
+export CLASSPATH=""
+#export TZ=TUC0
+export EMACS_UNIBYTE="Latin-1"
+export CDPATH=".:~/dev/acmsl/svn:~/dev/ventura24/svn:/usr/java"
+export FSVS_CONF=/etc/fsvs-jlean
+export FSVS_WAA=/var/spool/fsvs-jlean
+export PS1='\[\033k\033\\\]\u@\h:\w\$ '
+alias euler="ssh -p 21 euler"
+alias winxp="qemu -hda /dev/sda -hdb /dev/sdb"
+export MAILDIR=$HOME/.maildir/
+alias mvn-jde="mvn org.apache.maven.plugin:maven-emacs-plugin:1.2.2:jdee"
 source ~/bin/fancyvt.sh 
 #prevPid=""
 #if [ -f ~/.fetchmail.pid ]; then

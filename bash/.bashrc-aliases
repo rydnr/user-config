@@ -1,21 +1,29 @@
 alias d="ls --color"
 alias ls="ls --color=auto"
 alias ll="ls --color -l"
+alias acmcvs="CVS_RSH=ssh CVSROOT=:ext:chous@cvs.acm-sl.org:/var/cvs cvs"
+alias t24cvs="CVS_RSH=ssh CVSROOT=:ext:jlean@sourceforge.office.tipp24.de:/home/cvsroot cvs"
+alias v24cvs="CVS_RSH=ssh CVSROOT=:ext:jlean@192.168.34.253:/home/cvsroot cvs"
+#alias v24cvs="CVS_RSH=ssh CVSROOT=:pserver:jlean@192.168.34.253:/home/cvsroot cvs"
 alias w3ccvs="CVSROOT=:pserver:anonymous@dev.w3.org:/sources/public cvs"
 
 #alias emacs="(pushd ~ ; emacs --unibyte ; popd) &"
 #alias emacs="emacs -nw --unibyte"
 
 alias rdesktop="rdesktop -k en-us -g 1025x768 "
+alias syspass="mount /mnt/delta-managed 2>&1; oocalc /mnt/delta-managed/Tecnologia/Sysadmin/V24\ Administration/Policies/System\ Passwords/Pass_Sysadmin.xls"
 alias nicesvn="ps -ef | grep svn | grep -v grep | awk '{printf(\"sudo renice -19 -p %s\n\", \$2);}' | sh"
 
 alias euler="ssh -p 21 euler"
 alias winxp="qemu -hda /dev/sda -hdb /dev/sdb"
 
-alias mvn="/run/current-system/sw/bin/mvn -T 1C -Dlog4j.configuration=file://${HOME}/github/queryj/queryj-core/src/test/resources/log4j.xml -Dqueryjroot=/home/chous/github/queryj"
+alias mvn="/run/current-system/sw/bin/mvn -T 1C -Dlog4j.configuration=file:///home/chous/github/queryj/queryj-core/src/test/resources/log4j.xml -Dqueryjroot=/home/chous/github/queryj"
 
 alias mvn-jde="mvn org.apache.maven.plugin:maven-emacs-plugin:1.2.2:jdee"
 alias mvn-jetty="mvn -Dorg.mortbay.jetty.webapp.parentLoaderPriority=true jetty:run-exploded"
+alias jetty7-debug='java -Xdebug -Xrunjdwp:transport=dt_socket,address=9998,server=y,suspend=y -DDEBUG -Dlog4j.configuration=file://$PWD/log4j-v24.xml -jar start.jar OPTIONS=All'
+alias jetty7-start='java -DDEBUG -Dlog4j.configuration=file://$PWD/log4j-v24.xml -jar start.jar OPTIONS=All'
+alias jdownloader="java -jar ~/.jd/JDownloader.jar"
 alias git-push-queryj="git push origin +refs/heads/ventura24-2_0-stable.local:ventura24-2_0-stable"
 alias lp='sudo cat ~/.lp/lastpass | tail -n 1 | xclip'
 alias kde='sudo cat ~/.lp/kde | tail -n 1 | xclip'
@@ -50,7 +58,19 @@ alias mvn-jde="mvn org.apache.maven.plugin:maven-emacs-plugin:1.2.2:jdee"
 alias euler="ssh -p 21 euler"
 alias winxp="qemu -hda /dev/sda -hdb /dev/sdb"
 alias sm="wine /mnt/windows/SM\ v7/SM\ v7/Simulator.exe"
+export GRADLE_TAG='3.2.1';
+export GRAILS_TAG='201610';
+export NODEJS_TAG='201610';
+#alias tern='mkdir ${HOME}/.npm-${PWD##*/} 2> /dev/null; docker run -it -p 36515:36515 --rm --name tern -v ${PWD}:/home/osoco/workspace -v ${HOME}/toolbox/tern/bin:/bin -v ${HOME}/toolbox/tern/lib:/lib -v ${HOME}/.npm-${PWD##*/}:/home/osoco/.npm nexus.osoco.es/osoco/tern:${NODEJS_TAG}';
+#alias tern-tboxfe='mkdir ${HOME}/.npm-tboxfe 2> /dev/null; docker run -it --rm --name tboxfe-tern -p 36515:36515 -v ${HOME}/toolbox/tern/bin:/bin -v ${HOME}/toolbox/tern/lib:/lib -v /home/chous/osoco/Travelbox-Frontend/app:/home/osoco/workspace -v ${HOME}/.npm-tboxfe:/home/osoco/.npm nexus.osoco.es/osoco/tern:${NODEJS_TAG}';
+#alias npm-tboxfe='mkdir ${HOME}/.npm-tboxfe 2> /dev/null; docker run -it --rm --link tboxfe-tern:tern -e TERM="${TERM}" -e TERMCAP="${TERMCAP}" -v ${PWD}:/home/osoco/workspace -v ${HOME}/.npm-tboxfe:/home/osoco/.npm nexus.osoco.es/osoco/nodejs:${NODEJS_TAG} npm';
+#alias gradle='docker run -it --rm -e DOCKER_HOST="tcp://socat:2375" --link socat:socat -e DOCKER_HOST="tcp://socat:2375" -e HOST_PROJECTDIR="${PWD}" -e HOST_USERHOME="${HOME}" -e TERM="${TERM}" -e TERMCAP="${TERMCAP}" -v ${PWD}:/work --add-host nexus.osoco.es:10.3.0.41 nexus.osoco.es/osoco/gradle:${GRADLE_TAG}';
+alias gradle-tboxbe='export _prj="tboxbe"; mkdir ${HOME}/.gradle-${_prj} 2> /dev/null; docker run -it --rm -e DOCKER_HOST="tcp://socat:2375" --link socat:socat -e HOST_PROJECTDIR="${PWD}" -e HOST_USERHOME="${HOME}" -e TERM="${TERM}" -e TERMCAP="${TERMCAP}" -v ${PWD}:/opt/workspace -v ~/.gradle-${_prj}:/opt/.gradle nexus.osoco.es/osoco/gradle:${GRADLE_TAG}';
+alias gradle-tboxbo='export _prj="tboxbo"; mkdir ${HOME}/.gradle-${_prj} 2> /dev/null; docker run -it --rm -e DOCKER_HOST="tcp://socat:2375" --link socat:socat -e HOST_PROJECTDIR="${PWD}" -e HOST_USERHOME="${HOME}" -e TERM="${TERM}" -e TERMCAP="${TERMCAP}" -v ${PWD}:/opt/workspace -v ~/.gradle-${_prj}:/opt/.gradle nexus.osoco.es/osoco/gradle:${GRADLE_TAG}';
+alias grails-tboxbo='export _prj="tboxbo"; mkdir ${HOME}/.grails-${_prj} 2> /dev/null; docker run -it --rm -e TERM="${TERM}" -e TERMCAP="${TERMCAP}" -v ${PWD}:/opt/workspace -v ~/.grails-${_prj}:/opt/.grails nexus.osoco.es/osoco/grails:${GRAILS_TAG}';
+alias gradle-tboxse='export _prj="tboxse"; mkdir ${HOME}/.gradle-${_prj} 2> /dev/null; docker run -it --rm -e DOCKER_HOST="tcp://socat:2375" --link socat:socat -e HOST_PROJECTDIR="${PWD}" -e HOST_USERHOME="${HOME}" -e TERM="${TERM}" -e TERMCAP="${TERMCAP}" -v ${PWD}:/opt/workspace -v ~/.gradle-${_prj}:/opt/.gradle nexus.osoco.es/osoco/gradle:${GRADLE_TAG}';
 alias docker-socat="docker run -d --name socat -v /var/run/docker.sock:/var/run/docker.sock sequenceiq/socat"
+alias tbox-start="for s in socat tboxqueues tboxse-redis tboxse tboxbe-db tboxbe tboxfe; do docker start \${s}; done"
 alias android-studio="docker run -it --rm --name android-studio --rm -v ${HOME}/AndroidProjects:/data -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/kvm:/dev/kvm nexus.osoco.es/osoco/android-studio:201608"
 alias socat-socket-proxy='socat -v UNIX-LISTEN:/tmp/docker.sock,fork UNIX-CONNECT:/var/run/docker.sock'
 alias mrproper='docker rm $(docker ps -q -f status=exited); docker volume rm $(docker volume ls -qf dangling=true); docker rmi $(docker images --filter "dangling=true" -q --no-trunc)'
@@ -58,6 +78,7 @@ alias mrproper='docker rm $(docker ps -q -f status=exited); docker volume rm $(d
 export XSOCK=/tmp/.X11-unix
 export XAUTH=/tmp/.docker.xauth
 #alias gradle='docker run -it --rm -v ${PWD}:/work -v ${XSOCK}:${XSOCK} -v ${XAUTH}:${XAUTH} -e XAUTHORITY:${XAUTH} acmsl/gradle:3.2.1 ';
+alias gradle-packer='export _prj="packer"; mkdir ${HOME}/.gradle-${_prj} 2> /dev/null; docker run -it --rm -e DOCKER_HOST="tcp://socat:2375" --link socat:socat -e HOST_PROJECTDIR="${PWD}" -e HOST_USERHOME="${HOME}" -e TERM="${TERM}" -e TERMCAP="${TERMCAP}" -v ${PWD}:/work -v ~/.gradle-${_prj}:/opt/.gradle nexus.osoco.es/osoco/gradle:${GRADLE_TAG}';
 #alias pharo='docker run -it --rm -v /home/chous/osoco:/work --net=host -v ${XSOCK}:${XSOCK} -v ${XAUTH}:${XAUTH} -e XAUTHORITY:${XAUTH} nexus.osoco.es/osoco/gradle-pharo'
 #source ~/bin/color_maven.zsh
 #alias ssh='ssh-ident'
@@ -419,7 +440,7 @@ alias pbpaste='xsel --clipboard --output'
 # and something I use rather frequently when people chose funny file/directory names (sad enough):
 
 chr() {
-printf \$(printf '%03o' $1)
+printf $(printf '%03o' $1)
 }
 
 ord() {
@@ -834,6 +855,10 @@ alias lu="awk -F: '{ print $1}' /etc/passwd"
 # better ls
 alias ls='ls -lAi --group-directories-first --color="always"'
 
+# make basic commands interactive and verbose
+alias cp='cp -iv'      # interactive
+alias rm='rm -ri'      # interactive
+alias mv='mv -iv'       # interactive, verbose
 alias grep='grep -i --color="always"'  # ignore case
 
 # starts nano with line number enabled
@@ -849,7 +874,7 @@ alias path='echo -e ${PATH//:/\n}'
 alias dus='df -h'
 
 # quick ssh to raspberry pi
-alias raspi='ssh root@rasppi'
+alias raspi='ssh root@192.168.1.6'
 
 # perform 'ls' after 'rm' if successful.
 rmls() {
