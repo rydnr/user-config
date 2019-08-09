@@ -1,0 +1,25 @@
+startup_message off
+vbell on
+vbell_msg "BEEP"
+defscrollback 5000
+defutf8 on
+hardstatus on
+hardstatus alwayslastline
+hardstatus string "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d %C%a "
+defutf8 on
+utf8 on on
+startup_message off
+term "screen-256color"
+caption always "%{kY} %n%f* %t %?%{YR}%{kR} %u %{Rb}%:%{Yb}%?%?%F%{.b}%:%{.w}%?%="
+hardstatus alwayslastline "%{bk} %S %{kb} $LOGNAME %{bk} %H %?%{kb}%{kY} %-Lw%{Yk}%:%{Yb}%{Yk}%?%{Yk} %n%f* %t %{kY}%+Lw %-="
+#screen -T xterm-screen-256c -L -t emacs 0 /usr/bin/emacs -nw -f list-colors-display
+#screen -L -t queryj 0 bash
+#screen -L -t nlp-games 1 bash
+screen -L -t (euler) 3 ssh euler
+logfile ~/.screenlogs/%H_%Y-%m-%d-%n.log
+shelltitle "$ |bash"
+select 3
+#escape ^]^]
+escape ^Jj
+multiuser on
+aclchg :window: +x select
